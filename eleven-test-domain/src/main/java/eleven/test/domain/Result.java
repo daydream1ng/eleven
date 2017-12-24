@@ -37,4 +37,13 @@ public class Result {
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
     }
+
+    @Override
+    public String toString() {
+        return "Result{" +
+                "success=" + success +
+                ", data=" + data +
+                ", errorMsg='" + errorMsg + '\'' +
+                '}';
+    }
 }
