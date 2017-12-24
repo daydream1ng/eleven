@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="GBK"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd"
+       default-autowire="byName">
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="maxActive" value="${serverside.db.default.maxActive}"/>
+        <property name="maxIdle" value="${serverside.db.default.maxIdle}"/>
+        <property name="maxWait" value="${serverside.db.default.maxWait}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${serverside.db.default.timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${serverside.db.default.minEvictableIdleTimeMillis}"/>
+        <property name="driverClassName" value="${serverside.jdbc.driver}"/>
+        <property name="url" value="${serverside.jdbc.app.url}"/>
+        <property name="username" value="${serverside.jdbc.app.username}"/>
+        <property name="password" value="${serverside.jdbc.app.password}"/>
+    </bean>
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath*:sqlmap/**/*.xml"/>
+        <property name="typeAliasesPackage" value="eleven.test.domain"/>
+    </bean>
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+</beans>
